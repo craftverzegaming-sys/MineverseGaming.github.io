@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MR Studios — Minecraft Mods & Custom Development</title>
+    <meta name="description" content="Unique mods, custom mechanics and ideas built for Minecraft players who want more than the vanilla experience.">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#06060A',
+                        cardBg: '#111118',
+                        cardHover: '#171722',
+                        accentPurple: '#a855f7',
+                        accentPurpleDark: '#9333ea',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #06060A;
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(17, 17, 24, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+        }
+        .glass-panel:hover {
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
+        }
+        .purple-glow {
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.25);
+        }
+        .purple-glow-lg {
+            box-shadow: 0 0 80px rgba(168, 85, 247, 0.3);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(168, 85, 247, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(168, 85, 247, 0.05) 1px, transparent 1px);
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 antialiased selection:bg-purple-500 selection:text-white">
+
+    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-purple-900/25 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#home" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-purple-900 flex items-center justify-center purple-glow group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-cube text-white text-lg"></i>
+                </div>
+                <span class="font-heading font-extrabold text-xl tracking-wider text-white">MR <span class="text-purple-400">STUDIOS</span></span>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+                <a href="#home" class="hover:text-purple-400 transition-colors">Home</a>
+                <a href="#mods" class="hover:text-purple-400 transition-colors">Mods</a>
+                <a href="#custom" class="hover:text-purple-400 transition-colors">Custom Mods</a>
+                <a href="#how-it-works" class="hover:text-purple-400 transition-colors">How It Works</a>
+                <a href="#rules" class="hover:text-purple-400 transition-colors">Rules</a>
+                <a href="#updates" class="hover:text-purple-400 transition-colors">Updates</a>
+                <a href="#support" class="hover:text-purple-400 transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden md:flex items-center">
+                <a href="https://discord.gg/ySUqHs6C8" target="_blank" rel="noopener noreferrer" 
+                   class="relative inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold text-white transition-all bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl hover:from-purple-500 hover:to-purple-700 purple-glow hover:scale-105 active:scale-95">
+                    <i class="fa-brands fa-discord mr-2 text-base"></i> Join Discord
+                </a>
+            </div>
+
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="text-slate-300 hover:text-white focus:outline-none p-2" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-b border-purple-900/30 px-6 py-6 space-y-4">
+            <a href="#home" class="block text-base font-medium text-slate-200 hover:text-purple-400 transition-colors mobile-link">Home</a>
+            <a href="#mods" class="block text-base font-medium text-slate-200 hover:text-purple-400 transition-colors mobile-link">Mods</a>
+            <a href="#custom" class="block text-base font-medium text-slate-200 hover:text-purple-400 transition-colors mobile-link">Custom Mods</a>
+            <a href="#how-it-works" class="block text-base font-medium text-slate-200 hover:text-purple-400 transition-colors mobile-link">How It Works</a>
+            <a href="#rules" class="block text-base font-medium text-slate-200 hover:text-purple-400 transition-colors mobile-link">Rules</a>
+            <a href="#updates" class="block text-base font-medium text-slate-200 hover:text-purple-400 transition-colors mobile-link">Updates</a>
+            <a href="#support" class="block text-base font-medium text-slate-200 hover:text-purple-400 transition-colors mobile-link">Contact</a>
+            <div class="pt-2">
+                <a href="https://discord.gg/ySUqHs6C8" target="_blank" rel="noopener noreferrer" 
+                   class="flex items-center justify-center w-full px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl purple-glow">
+                    <i class="fa-brands fa-discord mr-2 text-lg"></i> Join MR Studios Discord
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section id="home" class="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-grid">
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute top-1/3 left-1/4 w-[300px] h-[300px] bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-panel border border-purple-500/30 text-purple-300 text-xs sm:text-sm font-semibold tracking-wider uppercase mb-8 purple-glow">
+                <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+                <span>MINECRAFT MODS • CUSTOM DEVELOPMENT</span>
+            </div>
+
+            <h1 class="font-heading text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight mb-6">
+                Make Minecraft Feel <span class="text-gradient">Different.</span>
+            </h1>
+
+            <p class="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed mb-10">
+                Unique mods, custom mechanics and ideas built for Minecraft players who want more than the vanilla experience.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+                <a href="#mods" class="w-full sm:w-auto px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl hover:from-purple-500 hover:to-purple-700 purple-glow hover:scale-105 transition-all text-center">
+                    Explore Mods <i class="fa-solid fa-arrow-down ml-2 text-sm"></i>
+                </a>
+                <a href="https://discord.gg/ySUqHs6C8" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-8 py-4 text-base font-semibold text-slate-200 glass-panel hover:bg-purple-900/20 rounded-2xl hover:border-purple-500/50 hover:text-white transition-all text-center">
+                    <i class="fa-brands fa-discord mr-2 text-purple-400"></i> Join MR Studios
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="mods" class="py-24 relative bg-darkBg/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-purple-400 font-semibold text-sm tracking-widest uppercase mb-3 block">MOD LIBRARY</span>
+                <h2 class="font-heading text-3xl sm:text-5xl font-bold text-white mb-4">Available Mods</h2>
+                <p class="text-slate-400 text-lg">Ready-to-use projects made for players, creators and Minecraft worlds.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <!-- Mod Card 1 -->
+                <div class="glass-panel rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 group">
+                    <div>
+                        <div class="w-full h-44 rounded-2xl bg-black/60 border border-purple-500/20 flex flex-col items-center justify-center p-4 mb-6 relative overflow-hidden group-hover:border-purple-500/50 transition-colors">
+                            <div class="absolute inset-0 bg-grid opacity-30"></div>
+                            <div class="relative z-10 w-full max-w-[220px] bg-slate-900/90 border border-purple-500/40 rounded-xl p-3 shadow-xl text-center">
+                                <div class="inline-block bg-black/80 text-white text-xs font-bold px-3 py-1 rounded-md border border-purple-500/50 mb-2 shadow-sm">
+                                    YourName
+                                </div>
+                                <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                                    <div class="bg-green-500 h-full rounded-full w-3/4 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-heading text-2xl font-bold text-white group-hover:text-purple-300 transition-colors">XP Bar Username</h3>
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-purple-950/60 border border-purple-500/30 text-purple-300">ONE-TIME</span>
+                        </div>
+                        <div class="text-3xl font-extrabold text-white mb-4">₹149</div>
+                        <p class="text-slate-400 text-base leading-relaxed mb-8">
+                            Displays the player's username alongside the XP bar for a clean and useful in-game identity display.
+                        </p>
+                    </div>
+                    <div>
+                        <a href="https://discord.com/channels/1551206643000283166/1551207096022864023" target="_blank" rel="noopener noreferrer" 
+                           class="flex items-center justify-center w-full py-3.5 px-6 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold shadow-lg shadow-purple-900/40 transition-all hover:scale-[1.02] active:scale-98">
+                            Buy Now
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mod Card 2 -->
+                <div class="glass-panel rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 group">
+                    <div>
+                        <div class="w-full h-44 rounded-2xl bg-black/60 border border-purple-500/20 flex items-center justify-center p-4 mb-6 relative overflow-hidden group-hover:border-purple-500/50 transition-colors">
+                            <div class="absolute inset-0 bg-grid opacity-30"></div>
+                            <div class="relative z-10 flex items-center space-x-4">
+                                <div class="w-14 h-14 rounded-xl bg-purple-950/80 border border-purple-500/40 flex items-center justify-center shadow-lg purple-glow">
+                                    <i class="fa-solid fa-gem text-purple-400 text-2xl"></i>
+                                </div>
+                                <div class="text-purple-400 text-xl font-bold animate-pulse">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </div>
+                                <div class="w-14 h-14 rounded-xl bg-purple-900/80 border border-purple-400 flex items-center justify-center shadow-lg purple-glow">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-pink-400 text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-heading text-2xl font-bold text-white group-hover:text-purple-300 transition-colors">Custom Villager Trades</h3>
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-purple-950/60 border border-purple-500/30 text-purple-300">ONE-TIME</span>
+                        </div>
+                        <div class="text-3xl font-extrabold text-white mb-4">₹199</div>
+                        <p class="text-slate-400 text-base leading-relaxed mb-8">
+                            Upgrade villager trading with powerful custom deals and unique item exchanges for your Minecraft world.
+                        </p>
+                    </div>
+                    <div>
+                        <a href="https://discord.com/channels/1551206643000283166/1551207096022864023" target="_blank" rel="noopener noreferrer" 
+                           class="flex items-center justify-center w-full py-3.5 px-6 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold shadow-lg shadow-purple-900/40 transition-all hover:scale-[1.02] active:scale-98">
+                            Buy Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="custom" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-purple-400 font-semibold text-sm tracking-widest uppercase mb-3 block">YOUR IDEA. YOUR RULES.</span>
+                <h2 class="font-heading text-3xl sm:text-5xl font-bold text-white mb-4">Custom Mods</h2>
+                <p class="text-slate-400 text-lg">Have an idea that doesn't exist yet? Tell us what you want and we'll discuss the features, Minecraft version and price.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 hover:border-purple-500/50">
+                    <div>
+                        <div class="text-purple-400 font-semibold text-sm uppercase tracking-wider mb-2">TIER 01</div>
+                        <h3 class="font-heading text-2xl font-bold text-white mb-4">Simple Custom</h3>
+                        <div class="text-4xl font-extrabold text-white mb-6">₹299<span class="text-purple-400 text-2xl">+</span></div>
+                        <p class="text-slate-400 text-base leading-relaxed">
+                            Small features, focused mechanics and straightforward gameplay changes.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 border-purple-500/40 purple-glow relative bg-gradient-to-b from-purple-950/20 to-transparent">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+                        MOST POPULAR
+                    </div>
+                    <div>
+                        <div class="text-purple-400 font-semibold text-sm uppercase tracking-wider mb-2">TIER 02</div>
+                        <h3 class="font-heading text-2xl font-bold text-white mb-4">Advanced Custom</h3>
+                        <div class="text-4xl font-extrabold text-white mb-6">₹499<span class="text-purple-400 text-2xl">+</span></div>
+                        <p class="text-slate-400 text-base leading-relaxed">
+                            More involved systems, mobs, abilities or multiple connected features.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 hover:border-purple-500/50">
+                    <div>
+                        <div class="text-purple-400 font-semibold text-sm uppercase tracking-wider mb-2">TIER 03</div>
+                        <h3 class="font-heading text-2xl font-bold text-white mb-4">Complex Custom</h3>
+                        <div class="text-4xl font-extrabold text-white mb-6">₹799<span class="text-purple-400 text-2xl">+</span></div>
+                        <p class="text-slate-400 text-base leading-relaxed">
+                            Larger projects with advanced mechanics, multiple systems and deeper development.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="https://discord.com/channels/1551206643000283166/1551207811013279845" target="_blank" rel="noopener noreferrer" 
+                   class="inline-flex items-center justify-center px-10 py-4 text-base font-bold text-white bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl hover:from-purple-500 hover:to-purple-700 purple-glow hover:scale-105 transition-all">
+                    Request a Custom Mod <i class="fa-solid fa-arrow-up-right-from-square ml-3 text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="py-24 relative bg-darkBg/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="font-heading text-3xl sm:text-5xl font-bold text-white mb-4">How It Works</h2>
+                <p class="text-slate-400 text-lg">Simple, transparent, and direct communication through Discord.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-panel rounded-3xl p-6 relative group hover:border-purple-500/40 transition-all">
+                    <div class="font-heading text-4xl font-extrabold text-purple-400/40 mb-4 group-hover:text-purple-400 transition-colors">01</div>
+                    <h3 class="font-heading text-xl font-bold text-white mb-3">Choose a Mod</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Browse our available mods or decide what kind of custom mod you want.
+                    </p>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-6 relative group hover:border-purple-500/40 transition-all">
+                    <div class="font-heading text-4xl font-extrabold text-purple-400/40 mb-4 group-hover:text-purple-400 transition-colors">02</div>
+                    <h3 class="font-heading text-xl font-bold text-white mb-3">Open a Discord Ticket</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Use the appropriate Discord button to contact MR Studios.
+                    </p>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-6 relative group hover:border-purple-500/40 transition-all">
+                    <div class="font-heading text-4xl font-extrabold text-purple-400/40 mb-4 group-hover:text-purple-400 transition-colors">03</div>
+                    <h3 class="font-heading text-xl font-bold text-white mb-3">Confirm the Details</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Discuss Minecraft version, features, requirements and pricing.
+                    </p>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-6 relative group hover:border-purple-500/40 transition-all">
+                    <div class="font-heading text-4xl font-extrabold text-purple-400/40 mb-4 group-hover:text-purple-400 transition-colors">04</div>
+                    <h3 class="font-heading text-xl font-bold text-white mb-3">Get Your Mod</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Once everything is confirmed, your mod is prepared according to the agreed requirements.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="rules" class="py-24 relative">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-panel rounded-3xl p-8 sm:p-12 border-red-500/30 bg-gradient-to-br from-purple-950/20 via-black to-red-950/10 purple-glow relative overflow-hidden">
+                <div class="absolute -right-20 -bottom-20 w-60 h-60 bg-red-600/10 rounded-full blur-[80px] pointer-events-none"></div>
+                
+                <div class="max-w-3xl relative z-10">
+                    <span class="text-red-400 font-semibold text-sm tracking-widest uppercase mb-3 block flex items-center">
+                        <i class="fa-solid fa-triangle-exclamation mr-2"></i> IMPORTANT
+                    </span>
+                    <h2 class="font-heading text-3xl sm:text-4xl font-bold text-white mb-6">Keep It Fair.</h2>
+                    
+                    <div class="text-xl sm:text-2xl font-bold text-purple-300 mb-6 bg-purple-950/50 p-4 rounded-xl border border-purple-500/30">
+                        Do Not Resell or Redistribute Our Mods.
+                    </div>
+
+                    <p class="text-slate-300 text-base sm:text-lg leading-relaxed mb-8">
+                        “Purchased mods are for the original buyer. Do not resell, redistribute, share, leak, re-upload or provide them to others without explicit permission from MR Studios.”
+                    </p>
+
+                    <div>
+                        <a href="https://discord.com/channels/1551206643000283166/1551252853715238962" target="_blank" rel="noopener noreferrer" 
+                           class="inline-flex items-center px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold transition-all shadow-lg shadow-purple-900/30">
+                            Read Full Rules <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="support" class="py-24 relative bg-darkBg/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-purple-400 font-semibold text-sm tracking-widest uppercase mb-3 block">COMMUNITY & HELP</span>
+                <h2 class="font-heading text-3xl sm:text-5xl font-bold text-white mb-4">Support & Channels</h2>
+                <p class="text-slate-400 text-lg">We are always here to help, listen to suggestions, and fix issues.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Suggestions -->
+                <div class="glass-panel rounded-3xl p-6 flex flex-col justify-between hover:border-purple-500/40 transition-all group">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-purple-950/80 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-5 text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <h3 class="font-heading text-xl font-bold text-white mb-2">Suggestions</h3>
+                        <p class="text-slate-400 text-sm mb-6">“Have an idea for MR Studios?”</p>
+                    </div>
+                    <div>
+                        <a href="https://discord.com/channels/1551206643000283166/1551209405880733738" target="_blank" rel="noopener noreferrer" 
+                           class="flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-purple-950/60 border border-purple-500/30 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-sm transition-all">
+                            Send Suggestion
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Bug Reports -->
+                <div class="glass-panel rounded-3xl p-6 flex flex-col justify-between hover:border-purple-500/40 transition-all group">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-purple-950/80 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-5 text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-bug"></i>
+                        </div>
+                        <h3 class="font-heading text-xl font-bold text-white mb-2">Bug Reports</h3>
+                        <p class="text-slate-400 text-sm mb-6">“Found something that isn't working?”</p>
+                    </div>
+                    <div>
+                        <a href="https://discord.com/channels/1551206643000283166/1551209546922463352" target="_blank" rel="noopener noreferrer" 
+                           class="flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-purple-950/60 border border-purple-500/30 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-sm transition-all">
+                            Report a Bug
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Any Query -->
+                <div class="glass-panel rounded-3xl p-6 flex flex-col justify-between hover:border-purple-500/40 transition-all group">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-purple-950/80 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-5 text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-circle-question"></i>
+                        </div>
+                        <h3 class="font-heading text-xl font-bold text-white mb-2">Any Query</h3>
+                        <p class="text-slate-400 text-sm mb-6">“Need help or have a question?”</p>
+                    </div>
+                    <div>
+                        <a href="https://discord.com/channels/1551206643000283166/1551209576026742814" target="_blank" rel="noopener noreferrer" 
+                           class="flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-purple-950/60 border border-purple-500/30 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-sm transition-all">
+                            Ask a Question
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Updates -->
+                <div id="updates" class="glass-panel rounded-3xl p-6 flex flex-col justify-between hover:border-purple-500/40 transition-all group">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-purple-950/80 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-5 text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-bullhorn"></i>
+                        </div>
+                        <h3 class="font-heading text-xl font-bold text-white mb-2">Updates</h3>
+                        <p class="text-slate-400 text-sm mb-6">“See the latest MR Studios announcements and updates.”</p>
+                    </div>
+                    <div>
+                        <a href="https://discord.com/channels/1551206643000283166/1551209265031684146" target="_blank" rel="noopener noreferrer" 
+                           class="flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-purple-950/60 border border-purple-500/30 hover:bg-purple-600 text-purple-300 hover:text-white font-semibold text-sm transition-all">
+                            View Updates
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 relative">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-heading text-3xl sm:text-5xl font-bold text-white mb-6">Ready to Get Started?</h2>
+            <p class="text-slate-400 text-lg max-w-2xl mx-auto mb-10">
+                “Choose a mod, open the appropriate Discord ticket and our team will help you with the next steps.”
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#mods" class="w-full sm:w-auto px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl hover:from-purple-500 hover:to-purple-700 purple-glow transition-all">
+                    Browse Mods
+                </a>
+                <a href="https://discord.gg/ySUqHs6C8" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-8 py-4 text-base font-semibold text-slate-200 glass-panel hover:bg-purple-900/20 rounded-2xl transition-all">
+                    <i class="fa-brands fa-discord mr-2 text-purple-400"></i> Join Discord
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-panel rounded-3xl p-8 sm:p-16 border-purple-500/40 bg-gradient-to-r from-purple-950/40 via-black to-indigo-950/40 purple-glow-lg text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-grid opacity-20"></div>
+                
+                <div class="relative z-10 max-w-3xl mx-auto">
+                    <div class="w-16 h-16 rounded-2xl bg-purple-600 flex items-center justify-center mx-auto mb-6 purple-glow">
+                        <i class="fa-brands fa-discord text-white text-3xl"></i>
+                    </div>
+                    <h2 class="font-heading text-3xl sm:text-5xl font-bold text-white mb-6">Got an Idea? Let's Build It.</h2>
+                    <p class="text-slate-300 text-lg sm:text-xl mb-10 leading-relaxed">
+                        “Join the MR Studios Discord to purchase mods, request custom development, report bugs, send suggestions or ask questions.”
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="https://discord.gg/ySUqHs6C8" target="_blank" rel="noopener noreferrer" 
+                           class="w-full sm:w-auto px-8 py-4 text-base font-bold text-white bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl hover:from-purple-500 hover:to-purple-700 purple-glow hover:scale-105 transition-all">
+                            <i class="fa-brands fa-discord mr-2 text-lg"></i> Join MR Studios Discord
+                        </a>
+                        <a href="https://discord.com/channels/1551206643000283166/1551209576026742814" target="_blank" rel="noopener noreferrer" 
+                           class="w-full sm:w-auto px-8 py-4 text-base font-bold text-slate-200 glass-panel hover:bg-purple-900/20 rounded-2xl hover:text-white transition-all">
+                            Ask a Question
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="glass-panel border-t border-purple-900/20 py-16 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+            <div>
+                <div class="font-heading font-extrabold text-2xl tracking-wider text-white mb-2">MR <span class="text-purple-400">STUDIOS</span></div>
+                <p class="text-sm text-slate-400 mb-2">Minecraft Mods • Custom Development</p>
+                <p class="text-xs text-purple-300 font-medium">Mods made by Mineverze in partnership with ItzRevenge.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-6 text-sm font-medium text-slate-400">
+                <a href="#home" class="hover:text-purple-400 transition-colors">Home</a>
+                <a href="#mods" class="hover:text-purple-400 transition-colors">Mods</a>
+                <a href="#custom" class="hover:text-purple-400 transition-colors">Custom Mods</a>
+                <a href="#how-it-works" class="hover:text-purple-400 transition-colors">How It Works</a>
+                <a href="#rules" class="hover:text-purple-400 transition-colors">Rules</a>
+            </div>
+
+            <div>
+                <a href="https://discord.gg/ySUqHs6C8" target="_blank" rel="noopener noreferrer" 
+                   class="inline-flex items-center px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-sm transition-all shadow-lg shadow-purple-900/30">
+                    <i class="fa-brands fa-discord mr-2 text-base"></i> Join Discord
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
